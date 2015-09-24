@@ -93,4 +93,5 @@ the setup of the environment takes approx. 10 minutes (with a host connected to 
 ## Tested Host Configurations
 
 - Mac OS X 10.8.5, Vagrant 1.7.2, VirtualBox 4.3.26
+- Linux/Ubuntu Trusty64, Vagrant 1.7.2, VirtualBox 4.3.10
 
