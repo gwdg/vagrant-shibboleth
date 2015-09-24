@@ -1,0 +1,11 @@
+--- /etc/default/tomcat7	2015-09-23 12:16:52.967590380 +0000
++++ /etc/default/tomcat7.new	2015-09-23 12:22:05.067579694 +0000
+@@ -18,7 +18,7 @@ TOMCAT7_GROUP=tomcat7
+ # response time). If you use that option and you run Tomcat on a machine with
+ # exactly one CPU chip that contains one or two cores, you should also add
+ # the "-XX:+CMSIncrementalMode" option.
+-JAVA_OPTS="-Djava.awt.headless=true -Xmx128m -XX:+UseConcMarkSweepGC"
++JAVA_OPTS="-Djava.awt.headless=true -Xmx512m -XX:MaxPermSize=128m -XX:+UseConcMarkSweepGC -Djdk.tls.trustNameService=true"
+ 
+ # To enable remote debugging uncomment the following line.
+ # You will then be able to use a java debugger on port 8000.

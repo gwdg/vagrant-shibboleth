@@ -1,0 +1,15 @@
+. $r/config
+STAGE_DL_D=${PWD}/_dl
+STAGE_WORK_D=${PWD}/_work
+DL_D=/vagrant/idp/_dl
+WORK_D=/vagrant/idp/_work
+
+IDP_D=shibboleth-identityprovider-${IDP_V}
+IDP_F=${IDP_D}-bin.tar.gz
+
+UAPPROVE_D=uApprove-${UAPPROVE_V}
+UAPPROVE_F=${UAPPROVE_D}.zip
+
+IDP_INSTALL=${WORK_D}/${IDP_D}
+UAPPROVE_INSTALL=${WORK_D}/${UAPPROVE_D}
+

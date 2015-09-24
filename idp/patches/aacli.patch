@@ -1,0 +1,13 @@
+diff --git a/aacli.sh b/aacli.sh
+index cca8df7..df29c2c 100755
+--- a/aacli.sh
++++ b/aacli.sh
+@@ -27,7 +27,7 @@ if [ ! -x "$JAVACMD" ] ; then
+   exit
+ fi
+ 
+-LOCALCLASSPATH=$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/classes.zip
++LOCALCLASSPATH=$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/classes.zip:/usr/share/tomcat7/lib/servlet-api.jar
+ 
+ # add in the dependency .jar files from the lib directory
+ LIBDIR=$LOCATION/../lib

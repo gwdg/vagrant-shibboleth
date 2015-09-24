@@ -1,0 +1,108 @@
+diff --git a/src/installer/resources/conf-tmpl/handler.xml b/src/installer/resources/conf-tmpl/handler.xml
+index 19ff387..60794b1 100644
+--- a/src/installer/resources/conf-tmpl/handler.xml
++++ b/src/installer/resources/conf-tmpl/handler.xml
+@@ -112,10 +112,12 @@
+     </ph:ProfileHandler>
+     
+     <!-- Login Handlers -->
++    <!--
+     <ph:LoginHandler xsi:type="ph:RemoteUser">
+         <ph:AuthenticationMethod>urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified</ph:AuthenticationMethod>
+     </ph:LoginHandler>
+-    
++    -->
++
+     <!-- Login handler that delegates the act of authentication to an external system. -->
+     <!-- This login handler and the RemoteUser login handler will be merged in the next major release. -->
+     <!--
+@@ -126,12 +128,10 @@
+     -->
+     
+     <!--  Username/password login handler -->
+-    <!-- 
+     <ph:LoginHandler xsi:type="ph:UsernamePassword" 
+                   jaasConfigurationLocation="file://$IDP_HOME$/conf/login.config">
+         <ph:AuthenticationMethod>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</ph:AuthenticationMethod>
+     </ph:LoginHandler>
+-    -->
+     
+     <!-- 
+         Removal of this login handler will disable SSO support, that is it will require the user to authenticate 
+diff --git a/src/installer/resources/conf-tmpl/relying-party.xml b/src/installer/resources/conf-tmpl/relying-party.xml
+index f20d01c..f68d576 100644
+--- a/src/installer/resources/conf-tmpl/relying-party.xml
++++ b/src/installer/resources/conf-tmpl/relying-party.xml
+@@ -84,10 +84,9 @@
+         <!-- Reads metadata from a URL and store a backup copy on the file system. -->
+         <!-- Validates the signature of the metadata and filters out all by SP entities in order to save memory -->
+         <!-- To use: fill in 'metadataURL' and 'backingFile' properties on MetadataResource element -->
+-        <!--
+         <metadata:MetadataProvider id="URLMD" xsi:type="metadata:FileBackedHTTPMetadataProvider"
+-                          metadataURL="http://example.org/metadata.xml"
+-                          backingFile="$IDP_HOME$/metadata/some-metadata.xml">
++          metadataURL="https://www.aai.dfn.de/fileadmin/metadata/DFN-AAI-Test-metadata.xml"
++          backingFile="$IDP_HOME$/metadata/DFN-AAI-Test-metadata.xml">
+             <metadata:MetadataFilter xsi:type="metadata:ChainingFilter">
+                 <metadata:MetadataFilter xsi:type="metadata:RequiredValidUntil" 
+                                 maxValidityInterval="P7D" />
+@@ -99,7 +98,6 @@
+                 </metadata:MetadataFilter>
+             </metadata:MetadataFilter>
+         </metadata:MetadataProvider>
+-        -->
+         
+     </metadata:MetadataProvider>
+ 
+diff --git a/src/installer/resources/conf-tmpl/service.xml b/src/installer/resources/conf-tmpl/service.xml
+index c04bc59..16517c3 100644
+--- a/src/installer/resources/conf-tmpl/service.xml
++++ b/src/installer/resources/conf-tmpl/service.xml
+@@ -11,11 +11,11 @@
+                                   urn:mace:shibboleth:2.0:relying-party classpath:/schema/shibboleth-2.0-relying-party.xsd
+                                   urn:mace:shibboleth:2.0:resource classpath:/schema/shibboleth-2.0-resource.xsd">
+ 
+-    <srv:Service id="shibboleth.AttributeResolver" xsi:type="attribute-resolver:ShibbolethAttributeResolver">
++    <srv:Service id="shibboleth.AttributeResolver" xsi:type="attribute-resolver:ShibbolethAttributeResolver" configurationResourcePollingFrequency="PT1M">
+         <srv:ConfigurationResource file="$IDP_HOME$/conf/attribute-resolver.xml" xsi:type="resource:FilesystemResource"/>
+     </srv:Service>
+ 
+-    <srv:Service id="shibboleth.AttributeFilterEngine" xsi:type="attribute-afp:ShibbolethAttributeFilteringEngine">
++    <srv:Service id="shibboleth.AttributeFilterEngine" xsi:type="attribute-afp:ShibbolethAttributeFilteringEngine" configurationResourcePollingFrequency="PT1M">
+         <srv:ConfigurationResource file="$IDP_HOME$/conf/attribute-filter.xml" xsi:type="resource:FilesystemResource"/>
+     </srv:Service>
+     
+@@ -28,11 +28,11 @@
+                  resolver="shibboleth.AttributeResolver" filter="shibboleth.AttributeFilterEngine"/>
+ 
+     <srv:Service id="shibboleth.RelyingPartyConfigurationManager" xsi:type="relyingParty:SAMLMDRelyingPartyConfigurationManager" 
+-                 depends-on="shibboleth.SAML1AttributeAuthority shibboleth.SAML2AttributeAuthority">
++                 depends-on="shibboleth.SAML1AttributeAuthority shibboleth.SAML2AttributeAuthority" configurationResourcePollingFrequency="PT1M">
+         <srv:ConfigurationResource file="$IDP_HOME$/conf/relying-party.xml" xsi:type="resource:FilesystemResource"/>
+     </srv:Service>
+ 
+-    <srv:Service id="shibboleth.HandlerManager" depends-on="shibboleth.RelyingPartyConfigurationManager" xsi:type="profile:IdPProfileHandlerManager">
++    <srv:Service id="shibboleth.HandlerManager" depends-on="shibboleth.RelyingPartyConfigurationManager" xsi:type="profile:IdPProfileHandlerManager" configurationResourcePollingFrequency="PT1M">
+         <srv:ConfigurationResource file="$IDP_HOME$/conf/handler.xml" xsi:type="resource:FilesystemResource"/>
+     </srv:Service>
+     
+@@ -45,4 +45,4 @@
+                              shibboleth.SAML1AttributeAuthority shibboleth.SAML2AttributeAuthority
+                              shibboleth.RelyingPartyConfigurationManager shibboleth.HandlerManager 
+                              shibboleth.StorageService" />
+-</srv:Services>
+\ No newline at end of file
++</srv:Services>
+diff --git a/src/main/webapp/WEB-INF/web.xml b/src/main/webapp/WEB-INF/web.xml
+index 82d3f93..35a7322 100644
+--- a/src/main/webapp/WEB-INF/web.xml
++++ b/src/main/webapp/WEB-INF/web.xml
+@@ -114,7 +114,7 @@
+         <!-- Space separated list of CIDR blocks allowed to access the status page -->
+         <init-param>
+             <param-name>AllowedIPs</param-name>
+-            <param-value>127.0.0.1/32 ::1/128</param-value>
++            <param-value>127.0.0.1/32 ::1/128 10.0.2.2/32</param-value>
+         </init-param>
+ 
+         <load-on-startup>2</load-on-startup>

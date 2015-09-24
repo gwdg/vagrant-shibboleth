@@ -1,0 +1,54 @@
+dn: ou=apps,dc=example,dc=org
+ou: apps
+description: All ldap application accounts in the organization
+objectClass: organizationalUnit
+
+dn: cn=shibboleth,ou=apps,dc=example,dc=org
+cn: shibboleth
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+userPassword: readonly
+
+dn: ou=people,dc=example,dc=org
+ou: people
+description: All people in organization
+objectClass: organizationalUnit
+
+dn: cn=Robert Smith,ou=people,dc=example,dc=org
+objectclass: inetOrgPerson
+cn: Robert Smith
+cn: Robert J Smith
+cn: bob  smith
+sn: smith
+uid: rjsmith
+userpassword: rJsmitH
+carlicense: HISCAR 123
+homephone: 555-111-2222
+mail: r.smith@example.org
+mail: rsmith@example.org
+mail: bob.smith@example.org
+description: swell guy
+ou: Human Resources
+
+dn: cn=Alice Wonderland,ou=people,dc=example,dc=org
+objectclass: inetOrgPerson
+cn: Alice Wonderland
+cn: alice
+sn: wonderland
+uid: awonder
+userpassword: wonderland
+mail: alice@example.org
+description: friend of bob
+ou: Cryptography
+
+dn: cn=Bob Wonderland,ou=people,dc=example,dc=org
+objectclass: inetOrgPerson
+cn: Bob Wonderland
+cn: bob
+sn: wonderland
+uid: bwonder
+userpassword: wonderland
+mail: bob@example.org
+description: friend of bob
+ou: Cryptography
+

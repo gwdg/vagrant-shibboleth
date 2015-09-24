@@ -1,0 +1,11 @@
+--- /etc/tomcat7/catalina.properties	2015-03-28 17:20:50.000000000 +0000
++++ /etc/tomcat7/catalina.properties.new	2015-09-23 12:26:24.201096919 +0000
+@@ -46,7 +44,7 @@ org.apache.jasper.,org.apache.naming.,or
+ #     "foo/*.jar": Add all the JARs of the specified folder as class
+ #                  repositories
+ #     "foo/bar.jar": Add bar.jar as a class repository
+-common.loader=${catalina.base}/lib,${catalina.base}/lib/*.jar,${catalina.home}/lib,${catalina.home}/lib/*.jar,${catalina.home}/common/classes,${catalina.home}/common/*.jar
++common.loader=${catalina.base}/lib,${catalina.base}/lib/*.jar,${catalina.home}/lib,${catalina.home}/lib/*.jar,${catalina.home}/common/classes,${catalina.home}/common/*.jar,/usr/share/java/mysql.jar
+ 
+ #
+ # List of comma-separated paths defining the contents of the "server"
