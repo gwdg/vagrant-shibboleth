@@ -3,9 +3,9 @@
 This environment provides a self-contained sample shibboleth environment comprising
 three nodes, namely:
 
-- 'sp.example.org' (Apache 2.4, MySQL, Shibboleth SP 2.5),
-- 'idp.example.org' (Apache 2.4, Tomcat 7, Shibboleth IdP Version 2.4.3, uApprove), 
-- 'ldap.example.org' (OpenLDAP with sample accounts 'alice', 'bob' and 'robert')
+- sp.example.org (Apache 2.4, MySQL, Shibboleth SP 2.5),
+- idp.example.org (Apache 2.4, Tomcat 7, Shibboleth IdP Version 2.4.3, uApprove), 
+- ldap.example.org (OpenLDAP with sample accounts 'alice', 'bob' and 'robert')
 
 running on Debian/Jessie 64-bit virtual machines (tested on VirtualBox).
 
@@ -13,9 +13,10 @@ During the provisioning process the metadata between IdP and SP are exchanged.
 
 ## Prequisites
 
-- Vagrant (tested with Version 1.7.2)
-- Provider (e.g. VirtualBox - tested with version 4.3)
-- download/unpack tools: curl, unzip
+- Vagrant 
+- Provider
+- Host command-line tools (for bootstrap.sh): 
+    curl, unzip
 
 ## Getting Started
 
@@ -30,23 +31,13 @@ Then, provision the machines:
 
 ## Test-Drive
 
-    1. In your local hosts web-browser, open 
-
-        'https://sp.example.org/secure-all'
-
-      [Accept this 'insecure' connection - self-signed certificate]
-    
-      'sp.example.org' will be resolved to the IP of the VM due to hostmanager plugin.
-
-
-    2. You are redirected to idp.example.org 
-      
-      [Accept this 'insecure' connection - since this is a self-signed certificate]
-
-       Login as user 'alice' and password 'wonderland'.
-
-    3. You should be successfully authenticated and redirected back to 'sp'.
-
+1. Open the URL https://sp.example.org/secure-all in your web-browser on the host.
+   Accept 'insecure' https connection since this is a self-signed certificate.
+2. You are redirected to https://idp.example.org/idp/Authn/UserPassword
+   Accept 'insecure' https connection since this is a self-signed certificate.
+3. Login as ``alice`` with password ``wonderland``.
+4. You should be successfully authenticated and redirected back to https://sp.example.org/secure-all,
+   where you are welcomed by a `404 Object not found` (and not a `401 not authorized`).
 
 ## Update
     
@@ -95,4 +86,5 @@ the setup of the environment takes approx. 10 minutes (with a host connected to 
 - Mac OS X 10.8.5, Vagrant 1.7.2, VirtualBox 4.3.26
 - Linux/Ubuntu Trusty64, Vagrant 1.7.2, VirtualBox 4.3.10
 - Mac OS X 10.10.5, Vagrant 1.7.4, VirtualBox 5.0.4
+- Windows 10 / Cygwin, Vagrant 1.7.4, VirtualBox 5.0.4
 
