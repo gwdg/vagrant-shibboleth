@@ -12,6 +12,8 @@ tar -xzvf ${STAGE_DL_D}/$IDP_F
 unzip ${STAGE_DL_D}/$UAPPROVE_F
 cp -R ${UAPPROVE_D}/lib/*                                    ${IDP_D}/lib/
 cp -R ${UAPPROVE_D}/lib/jdbc/*                               ${IDP_D}/lib/
+mkdir -p ${IDP_D}/src/main/webapp/uApprove
+cp ${UAPPROVE_D}/webapp/*                                 ${IDP_D}/src/main/webapp/uApprove
 cp ${UAPPROVE_D}/manual/configuration/uApprove.xml        ${IDP_D}/src/installer/resources/conf-tmpl/
 cp ${UAPPROVE_D}/manual/configuration/uApprove.properties ${IDP_D}/src/installer/resources/conf-tmpl/
 cp ${UAPPROVE_D}/manual/examples/terms-of-use.html        ${IDP_D}/src/installer/resources/conf-tmpl/
