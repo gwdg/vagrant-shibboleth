@@ -18,6 +18,7 @@ Vagrant.configure(2) do |config|
   config.vm.define "sp" do |config|
     config.vm.hostname = "sp.example.org"
     config.vm.provision "install",  type: "shell", path: "sp/install.sh"
+    config.vm.provision "eds",      type: "shell", path: "sp/eds.sh"
     config.vm.provision "metadata", type: "shell", path: "sp/metadata.sh"
     config.vm.network "private_network", ip: "172.16.80.3"
   end

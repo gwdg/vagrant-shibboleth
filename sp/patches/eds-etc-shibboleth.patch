@@ -1,0 +1,20 @@
+diff --git a/shibboleth2.xml b/shibboleth2.xml
+index 591c2a0..8282f9b 100644
+--- a/shibboleth2.xml
++++ b/shibboleth2.xml
+@@ -48,9 +48,15 @@
+             </SSO>
+             -->
+             
++            <SSO discoveryProtocol="SAMLDS" discoveryURL="https://sp.example.org/DS/WAYF">
++              SAML2 SAML1
++            </SSO>
++            
++            <!--
+ 	    <SSO entityID="https://idp.example.org/idp/shibboleth">
+               SAML2 SAML1
+             </SSO>
++             --> 
+ 
+             <!-- SAML and local-only logout. -->
+             <Logout>SAML2 Local</Logout>

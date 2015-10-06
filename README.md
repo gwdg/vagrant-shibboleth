@@ -3,8 +3,8 @@
 This environment provides a self-contained sample shibboleth environment comprising
 three nodes, namely:
 
-- sp.example.org (Apache 2.4, MySQL, Shibboleth SP 2.5),
-- idp.example.org (Apache 2.4, Tomcat 7, Shibboleth IdP Version 2.4.3, uApprove), 
+- sp.example.org (Apache 2.4, MySQL, Shibboleth SP 2.5, Shibboleth DS 1.1.0),
+- idp.example.org (Apache 2.4, Tomcat 7, Shibboleth IdP Version 2.4.3, uApprove 2.6), 
 - ldap.example.org (OpenLDAP with sample accounts 'alice', 'bob' and 'robert')
 
 running on Debian/Jessie 64-bit virtual machines (tested on VirtualBox).
@@ -14,7 +14,7 @@ During the provisioning process the metadata between IdP and SP are exchanged.
 ## Prequisites
 
 - Vagrant 
-- Provider
+- Provider (e.g. VirtualBox)
 - Host command-line tools (for bootstrap.sh): 
     curl, unzip
 
@@ -25,24 +25,46 @@ stages shibboleth-identityprovider and uApprove once.
 
     $ ./bootstrap.sh
 
-Then, provision the machines:
+All three machines are provisioned via
 
     $ ./provision.sh
 
 ## Test-Drive
 
-1. Open the URL https://sp.example.org/secure-all in your web-browser on the host.
+1. Service Provider / Unauthenticated
+   
+   Open the URL https://sp.example.org/secure-all in your web-browser on the host.
+
    Accept 'insecure' https connection since this is a self-signed certificate.
-2. You are redirected to https://idp.example.org/idp/Authn/UserPassword
-   Accept 'insecure' https connection since this is a self-signed certificate.
-3. Login as ``alice`` with password ``wonderland``.
-4. You should be successfully authenticated and redirected back to https://sp.example.org/secure-all,
-   where you are welcomed by a `404 Object not found` (and not a `401 not authorized`).
+
+2. Embedded Discovery Service / Where Are You From (WAYF) page
+
+   You are redirected to the WAYF page at https://sp.example.org/DS/WAYF (using the embedded discovery service)
+   where you can choose one IDP.
+
+3. Identity Provider
+
+   You are redirected to https://idp.example.org/idp/Authn/UserPassword.
+
+   Also accept 'insecure' https connection since this is a self-signed certificate.
+
+4. Login
+  
+   with username ``alice`` and password ``wonderland``.
+
+5. uApprove
+
+   You are about to see the 'Terms of Use' page which you should accept and confirm to see a list of three
+   attributes: 'eduPersonEntitlement', 'email' and 'eduPersonScopedAffiliation'.
+
+6. Service Provider / Authenticated
+
+   Finally, you should be successfully authenticated and redirected back to https://sp.example.org/secure-all,
+   where you are welcomed by a 'Not found' page (which means 'success').
 
 ## Update
     
 Edit `idp/config` to specify newer software versions of the IdP 
-
 
 ## Further URLs
     
