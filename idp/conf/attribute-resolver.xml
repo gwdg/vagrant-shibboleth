@@ -318,7 +318,7 @@
         principalCredential="readonly">
         <dc:FilterTemplate>
             <![CDATA[
-                (cn=$requestContext.principalName)
+                (uid=$requestContext.principalName)
             ]]>
         </dc:FilterTemplate>
     </resolver:DataConnector>

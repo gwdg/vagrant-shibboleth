@@ -20,7 +20,7 @@ cn: Robert Smith
 cn: Robert J Smith
 cn: bob  smith
 sn: smith
-uid: rjsmith
+uid: robert
 userpassword: rJsmitH
 carlicense: HISCAR 123
 homephone: 555-111-2222
@@ -35,7 +35,7 @@ objectclass: inetOrgPerson
 cn: Alice Wonderland
 cn: alice
 sn: wonderland
-uid: awonder
+uid: alice
 userpassword: wonderland
 mail: alice@example.org
 description: friend of bob
@@ -46,7 +46,7 @@ objectclass: inetOrgPerson
 cn: Bob Wonderland
 cn: bob
 sn: wonderland
-uid: bwonder
+uid: bob
 userpassword: wonderland
 mail: bob@example.org
 description: friend of bob
