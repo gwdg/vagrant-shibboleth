@@ -3,14 +3,14 @@
 This environment provides a self-contained runnable shibboleth environment comprising
 four nodes, namely:
 
-- sp.example.org (Shibboleth SP 2.5, Shibboleth Embedded Discovery 1.1.0, Apache 2.4),
+- idp3.example.org (Shibboleth IdP v3.1.2, Tomcat 8, Apache 2.4)
 - idp.example.org (Shibboleth IdP v2.4.3, uApprove 2.6, Tomcat 7, Apache 2.4), 
-- ldap.example.org (OpenLDAP with sample accounts 'alice', 'bob' and 'robert')
-- idp3.example.org (Shibboleth IdP v3.1.3, Tomcat 8, Apache 2.4)
+- sp.example.org (Shibboleth SP 2.5, Shibboleth Embedded Discovery 1.1.0, Apache 2.4),
+- ldap.example.org (OpenLDAP)
 
 running on Debian/Jessie 64-bit virtual machines.
 
-During the provisioning process the metadata between IdP and SP are exchanged.
+During the provisioning process the metadata between IdPs and the SP are exchanged.
 
 ## Prequisites
 
@@ -73,30 +73,7 @@ In the default setup both IdP v2 and IdP v3 nodes are provisioned and the SP is 
 If you only need one particular IdP or want SP to pass control to a specific IdP for login, please
 edit `config` before running `provision.sh`.
 
-- enable/disable setup of IdP v2 or v3 nodes (defaults: both will be setup).
-- enable WAYF/EDS or make the SP pass control to either IdP v2 and v3
-
 Edit `idp3/config`, `sp/config` `idp/config` to update software versions of EDS, IdP v2 and v3 (needed at bootstrap time).
-
-## Further URLs
-    
-    https://sp.example.org/secure-all
-    https://sp.example.org/cgi-bin/test.py
- 
-    https://idp.example.org/idp/Authn/UserPassword
-    https://idp.example.org/idp/status
-    https://idp.example.org/idp/profile/Status
-    http://idp.example.org:8080/manager (u: tomcat, p: tomcat)
-    https://idp.example.org/idp/profile/Metadata/SAML
-
-    https://sp.example.org/Shibboleth.sso/Metadata
-    https://sp.example.org/Shibboleth.sso/Status
-    https://sp.example.org/Shibboleth.sso/Session
-
-    https://idp3.example.org/idp/
-    https://idp3.example.org/idp/status
-    https://idp3.example.org/idp/shibboleth
-
 
 ## Advanced Topics
 
@@ -193,4 +170,24 @@ end
 - Linux/Ubuntu Trusty64, Vagrant 1.7.2, VirtualBox 4.3.10
 - Mac OS X 10.10.5, Vagrant 1.7.4, VirtualBox 5.0.4
 - Windows 10 / Cygwin, Vagrant 1.7.4, VirtualBox 5.0.4
+
+## Developer Notes: Available URLs
+    
+    https://sp.example.org/secure-all
+    https://sp.example.org/cgi-bin/test.py
+ 
+    https://idp.example.org/idp/Authn/UserPassword
+    https://idp.example.org/idp/status
+    https://idp.example.org/idp/profile/Status
+    http://idp.example.org:8080/manager (u: tomcat, p: tomcat)
+    https://idp.example.org/idp/profile/Metadata/SAML
+
+    https://sp.example.org/Shibboleth.sso/Metadata
+    https://sp.example.org/Shibboleth.sso/Status
+    https://sp.example.org/Shibboleth.sso/Session
+
+    https://idp3.example.org/idp/
+    https://idp3.example.org/idp/status
+    https://idp3.example.org/idp/shibboleth
+
 
