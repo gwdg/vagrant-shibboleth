@@ -4,7 +4,6 @@ FILE=$1
 
 xmlstarlet ed \
   -a '/_:EntityDescriptor' -t attr -n 'xmlns:mdui' -v 'urn:oasis:names:tc:SAML:metadata:ui' \
-  -u '/_:EntityDescriptor/@xmlns:mdui' -v 'urn:oasis:names:tc:SAML:metadata:ui' \
   -s '/_:EntityDescriptor/_:IDPSSODescriptor/_:Extensions' -t elem -n 'N' \
   -s '//N' -t elem -n 'DisplayName'  \
   -i '//N/DisplayName' -t attr -n 'xml:lang' -v 'en' \

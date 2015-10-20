@@ -24,7 +24,7 @@ sudo patch /etc/tomcat8/context.xml tomcat8/context.xml.patch
 sudo cp tomcat8/idp.xml /etc/tomcat8/Catalina/localhost/
 
 TOMCAT_HOME=/usr/share/tomcat8
-sudo cp jstl-1.2.jar ${TOMCAT_HOME}/lib
+sudo cp $r/_dl/jstl-1.2.jar ${TOMCAT_HOME}/lib
 
 sudo service tomcat8 restart
 
