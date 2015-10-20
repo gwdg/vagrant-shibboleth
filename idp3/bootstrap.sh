@@ -4,8 +4,8 @@ cd $r
 . ./config
 mkdir -p _dl
 cd _dl
-wget $U
-wget https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar
+curl -JOL $U
+curl -JOL https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar
 cd ..
 
 mkdir -p _work
