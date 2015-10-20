@@ -1,0 +1,121 @@
+diff --git a/access-control.xml b/access-control.xml
+index 9b23ad7..346a2ba 100644
+--- a/access-control.xml
++++ b/access-control.xml
+@@ -24,7 +24,7 @@
+     
+         <entry key="AccessByIPAddress">
+             <bean parent="shibboleth.IPRangeAccessControl"
+-                p:allowedRanges="#{ {'127.0.0.1/32', '::1/128'} }" />
++                p:allowedRanges="#{ {'127.0.0.1/32', '::1/128', '172.16.80.0/24'} }" />
+         </entry>
+     
+     </util:map>
+diff --git a/authn/jaas.config b/authn/jaas.config
+index 232e93d..4ab1543 100644
+--- a/authn/jaas.config
++++ b/authn/jaas.config
+@@ -4,8 +4,8 @@ ShibUserPassAuth {
+ 	*/
+ 
+     org.ldaptive.jaas.LdapLoginModule required
+-      ldapUrl="ldap://localhost:10389"
++      ldapUrl="ldap://ldap.example.org"
+       baseDn="ou=people,dc=example,dc=org"
+       userFilter="uid={user}";
+ 
+-};
+\ No newline at end of file
++};
+diff --git a/idp.properties b/idp.properties
+index 50ea25a..59a4574 100644
+--- a/idp.properties
++++ b/idp.properties
+@@ -35,6 +35,10 @@ idp.encryption.key= %{idp.home}/credentials/idp-encryption.key
+ idp.encryption.cert= %{idp.home}/credentials/idp-encryption.crt
+ #idp.encryption.key.2 = %{idp.home}/credentials/idp-encryption-old.key
+ #idp.encryption.cert.2 = %{idp.home}/credentials/idp-encryption-old.crt
++#idp.signing.key= /etc/ssl/private/idp3.example.org.key.pem
++#idp.signing.cert= /etc/ssl/localcerts/idp3.example.org.crt.pem
++#idp.encryption.key= /etc/ssl/private/idp3.example.org.key.pem
++#idp.encryption.cert= /etc/ssl/localcerts/idp3.example.org.crt.pem
+ 
+ # Sets the bean ID to use as a default security configuration set
+ #idp.security.config = shibboleth.DefaultSecurityConfiguration
+diff --git a/ldap.properties b/ldap.properties
+index 62f4d21..2221021 100644
+--- a/ldap.properties
++++ b/ldap.properties
+@@ -4,8 +4,8 @@
+ #idp.authn.LDAP.authenticator                   = anonSearchAuthenticator
+ 
+ ## Connection properties ##
+-idp.authn.LDAP.ldapURL                          = ldap://localhost:10389
+-#idp.authn.LDAP.useStartTLS                     = true
++idp.authn.LDAP.ldapURL                          = ldap://ldap.example.org
++idp.authn.LDAP.useStartTLS                      = false
+ #idp.authn.LDAP.useSSL                          = false
+ #idp.authn.LDAP.connectTimeout                  = 3000
+ 
+@@ -30,8 +30,8 @@ idp.authn.LDAP.baseDN                           = ou=people,dc=example,dc=org
+ idp.authn.LDAP.userFilter                       = (uid={user})
+ # bind search configuration
+ # for AD: idp.authn.LDAP.bindDN=adminuser@domain.com
+-idp.authn.LDAP.bindDN                           = uid=myservice,ou=system
+-idp.authn.LDAP.bindDNCredential                 = myServicePassword
++idp.authn.LDAP.bindDN                           = cn=shibboleth,ou=apps,dc=example,dc=org
++idp.authn.LDAP.bindDNCredential                 = readonly
+ 
+ # Format DN resolution, used by directAuthenticator, adAuthenticator
+ # for AD use idp.authn.LDAP.dnFormat=%s@domain.com
+diff --git a/logback.xml b/logback.xml
+index 8702819..533efc5 100644
+--- a/logback.xml
++++ b/logback.xml
+@@ -113,4 +113,16 @@
+         <appender-ref ref="IDP_WARN" />
+     </root>
+ 
+-</configuration>
+\ No newline at end of file
++    <!--
++	<filter class="ch.qos.logback.core.filter.EvaluatorFilter">
++	    <evaluator>
++		<matcher>
++		    <Name>VelocityStatusViewFilter</Name>
++		    <regex>ResourceManager : unable to find resource 'status.vm' in any resource loader.</regex>
++		</matcher>
++		<expression>VelocityStatusViewFilter.matches(formattedMessage)</expression>
++	    </evaluator>
++	    <OnMatch>DENY</OnMatch>
++	</filter>
++    -->
++</configuration>
+diff --git a/metadata-providers.xml b/metadata-providers.xml
+index ff485d0..e9a2202 100644
+--- a/metadata-providers.xml
++++ b/metadata-providers.xml
+@@ -73,6 +73,22 @@
+     <MetadataProvider id="LocalMetadata"  xsi:type="FilesystemMetadataProvider" metadataFile="PATH_TO_YOUR_METADATA"/>
+ 
+      -->
+-          
++    <MetadataProvider id="LocalSPMetadata"  xsi:type="FilesystemMetadataProvider" metadataFile="%{idp.home}/metadata/sp-metadata.xml"/>
++       
++    <!-- wie Shib IdP 2.x, zunächst einmal die Metadaten der Testföderation -->
++    <MetadataProvider id="DFN_AAI_Test"
++                      xsi:type="FileBackedHTTPMetadataProvider"
++                  backingFile="%{idp.home}/metadata/DFN-AAI-Test-metadata.xml"
++                  metadataURL="http://www.aai.dfn.de/fileadmin/metadata/sha2/DFN-AAI-Test-metadata.xml"
++                  maxRefreshDelay="PT2H">
++            <!-- auf den Download der Metadaten via https kann verzichtet werden, da hier 
++                 die Signatur überprüft wird -->
++            <MetadataFilter xsi:type="SignatureValidation" requireSignedMetadata="true"
++                    certificateFile="/etc/ssl/aai/dfn-aai.pem"/>
++            <MetadataFilter xsi:type="EntityRoleWhiteList">
++                    <RetainedRole>md:SPSSODescriptor</RetainedRole>
++            </MetadataFilter>
++ 
++    </MetadataProvider>
+     
+ </MetadataProvider>

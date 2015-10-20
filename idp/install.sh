@@ -127,6 +127,14 @@ EOF
 ln -s ${DEST}/etc/apache2.conf /etc/apache2/sites-available/idp.conf
 a2ensite idp
 
+apt-get install -y xmlstarlet
+
+cd /opt/shibboleth-idp/metadata
+mv idp-metadata.xml idp-metadata-no-mdui.xml
+. $r/mdui.conf
+$r/mdui.sh idp-metadata-no-mdui.xml >idp-metadata.xml
+cp $r/logo.jpg /var/www/html
+
 service apache2 reload
 service tomcat7 restart
 

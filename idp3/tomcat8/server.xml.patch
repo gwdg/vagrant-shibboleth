@@ -1,0 +1,6 @@
+94,96c94
+<     <!--
+<     <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
+<     -->
+---
+>     <Connector port="8009" address="127.0.0.1" protocol="AJP/1.3" redirectPort="8443" enableLookups="false" useIPVHosts="true" maxPostSize="100000" URIEncoding="UTF-8" />

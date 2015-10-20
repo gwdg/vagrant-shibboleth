@@ -1,0 +1,4 @@
+. $r/config
+EDS_D=shibboleth-embedded-ds-${EDS_V}
+EDS_F=${EDS_D}.tar.gz
+

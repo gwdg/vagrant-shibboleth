@@ -1,0 +1,9 @@
+# Enable IDP V2 host at 'idp.example.org'
+IDP2=enabled
+
+# Enable IDP V3 host at 'idp3.example.org'
+IDP3=enabled
+
+# Choose sp's SSO ('idp','idp3' or 'eds')
+SSO=eds
+
