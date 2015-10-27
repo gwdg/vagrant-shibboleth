@@ -1,6 +1,7 @@
 . ./config
 
-vagrant up ldap
+vagrant up ldap --no-provision
+vagrant provision ldap --provision-with base,install # debug
 
 vagrant up sp  --no-provision
 vagrant provision sp --provision-with base,dev,install,config,eds

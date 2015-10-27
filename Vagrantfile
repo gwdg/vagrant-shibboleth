@@ -13,6 +13,7 @@ Vagrant.configure(2) do |config|
     config.vm.hostname = "ldap.example.org"
     config.vm.network "private_network", ip: "172.16.80.2"
     config.vm.provision "install",   type: "shell", path: "ldap/install.sh"
+    config.vm.provision "debug",     type: "shell", path: "ldap/debug.sh"
   end
   
   config.vm.define "sp" do |config|

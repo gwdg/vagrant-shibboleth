@@ -18,6 +18,8 @@ cp /etc/shibboleth/shibboleth2.xml /etc/shibboleth/shibboleth2.xml.orig
 
 xmlstarlet ed -L \
   -i "//_:Sessions" -t attr -n consistentAddress -v true \
+  -u "//_:Sessions/@handlerSSL" -v "true" \
+  -u "//_:Sessions/@cookieProps" -v "https" \
   -u "//_:Handler[@type='Status']/@acl" -v "127.0.0.1 ::1 172.16.80.1" \
   -u "//_:Handler[@type='Session']/@showAttributeValues" -v "true" \
   -u "//_:Errors/@supportContact" -v "aai-hotline@example.org" \
