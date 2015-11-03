@@ -29,9 +29,12 @@ xmlstarlet ed -L \
 
 a2enmod ssl
 a2ensite sp
+a2enmod cgi
 
 service shibd restart
 service apache2 reload
+
+cp $r/test.py /usr/lib/cgi-bin
 
 #cd $r/patches
 #patch /etc/shibboleth/shibboleth2.xml <session.patch
