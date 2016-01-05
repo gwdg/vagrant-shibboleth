@@ -3,7 +3,7 @@
 This environment provides a self-contained runnable shibboleth environment comprising
 four nodes, namely:
 
-- idp3.example.org (Shibboleth IdP v3.1.2, Tomcat 8, Apache 2.4)
+- idp3.example.org (Shibboleth IdP v3.2, Tomcat 8, Apache 2.4)
 - idp.example.org (Shibboleth IdP v2.4.3, uApprove 2.6, Tomcat 7, Apache 2.4), 
 - sp.example.org (Shibboleth SP 2.5, Shibboleth Embedded Discovery 1.1.0, Apache 2.4),
 - ldap.example.org (OpenLDAP)
@@ -21,13 +21,23 @@ During the provisioning process the metadata between IdPs and the SP are exchang
 
 ## Getting Started
 
-Bootstrap script installs vagrant hostmanager plugin (also modifies the `sudoers` file of your host to grant vagrant/hostmanager access to
-dynamically manipulate the `hosts` file on your host).
-It also stages `eds`, `shibboleth-identityprovider v2` and `uApprove` sources, and it prepares `shibboleth-identityprovider v3` sources.
+**RUN ONCE PER HOST:** 
+
+Execute script to install vagrant hostmanager plugin which also modifies the `sudoers` file of your host to grant vagrant/hostmanager access to
+dynamically manipulate the `hosts` file on your host.
+
+    $ ./install-vagrant-plugins.sh
+
+**RUN ONCE PER CLEAN PROJECT:** 
+
+Execute bootstrap script to stage `eds`, `shibboleth-identityprovider v2` and `uApprove` sources, and `shibboleth-identityprovider v3` sources.
+
 
     $ ./bootstrap.sh
 
-All machines are provisioned via
+**Then**
+
+Run script to provision all machines.
 
     $ ./provision.sh
 
@@ -35,7 +45,7 @@ All machines are provisioned via
 
 1. Service Provider / Unauthenticated
    
-   Open the URL https://sp.example.org/secure-all in your web-browser on the host.
+   On your host, open the URL https://sp.example.org/secure-all in your favorite web-browser.
 
    Please accept 'insecure' https connection since this is a self-signed certificate.
 
