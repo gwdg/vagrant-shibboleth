@@ -1,0 +1,189 @@
+diff --git a/conf/saml-nameid.properties b/conf/saml-nameid.properties
+index 8530c4f..96ddefd 100644
+--- a/conf/saml-nameid.properties
++++ b/conf/saml-nameid.properties
+@@ -20,16 +20,21 @@
+ 
+ # For computed IDs, set a source attribute and a secret salt:
+ #idp.persistentId.sourceAttribute = changethistosomethingreal
++idp.persistentId.sourceAttribute = uid_without_encoding
+ #idp.persistentId.useUnfilteredAttributes = true
+ # Do *NOT* share the salt with other people, it's like divulging your private key.
+ #idp.persistentId.algorithm = SHA
+ #idp.persistentId.salt = changethistosomethingrandom
++idp.persistentId.salt = ch4ng3th1stos0m3th1ngr4nd0m
+ 
+ # To use a database, use shibboleth.StoredPersistentIdGenerator
+ #idp.persistentId.generator = shibboleth.ComputedPersistentIdGenerator
++idp.persistentId.generator = shibboleth.StoredPersistentIdGenerator
+ # For basic use, set this to a JDBC DataSource bean name:
+-#idp.persistentId.dataSource = PersistentIdDataSource
++idp.persistentId.dataSource = PersistentIdDataSource
+ # For advanced use, set to a bean inherited from shibboleth.JDBCPersistentIdStore
+ #idp.persistentId.store = MyPersistentIdStore
++idp.persistentId.store = PersistentIdStore
++#idp.persistentId.store = shibboleth.MySQLDataSource
+ # Set to an empty property to skip hash-based generation of first stored ID
+ #idp.persistentId.computed = shibboleth.ComputedPersistentIdGenerator
+diff --git a/conf/saml-nameid.xml b/conf/saml-nameid.xml
+index ea97448..31bd701 100644
+--- a/conf/saml-nameid.xml
++++ b/conf/saml-nameid.xml
+@@ -34,9 +34,7 @@
+         <ref bean="shibboleth.SAML2TransientGenerator" />
+         
+         <!-- Uncommenting this bean requires configuration in saml-nameid.properties. -->
+-        <!--
+         <ref bean="shibboleth.SAML2PersistentGenerator" />
+-        -->
+ 
+         <!--
+         <bean parent="shibboleth.SAML2AttributeSourcedGenerator"
+
+diff --git a/conf/c14n/subject-c14n.xml b/conf/c14n/subject-c14n.xml
+index 16fc6f1..2eeb280 100644
+--- a/conf/c14n/subject-c14n.xml
++++ b/conf/c14n/subject-c14n.xml
+@@ -65,7 +65,7 @@
+         <ref bean="c14n/SAML1CryptoTransient" /> 
+         
+         <!-- Handle a SAML 2 persistent ID, provided a stored strategy is in use. -->
+-        <!-- <ref bean="c14n/SAML2Persistent" /> -->
++        <ref bean="c14n/SAML2Persistent" />
+         
+         <!--
+         Finally we have beans for decoding arbitrary SAML formats directly. By default, these are turned off,
+diff --git a/conf/global.xml b/conf/global.xml
+index 60562e3..2b46700 100644
+--- a/conf/global.xml
++++ b/conf/global.xml
+@@ -48,6 +48,70 @@
+         <entry key="foo" value="bar"/>
+     </util:map>
+     -->
+-    
++
++    <!--
++    Bean for storage of data in a MySQL database. Used for
++    persistent IDs on the one hand and user consent data on the other hand.
++    We rely Apache Commons DBCP for connection pooling, as it comes
++    bundled with Tomcat 7.
++    -->
++    <bean id="shibboleth.MySQLDataSource"
++          class="org.apache.commons.dbcp.BasicDataSource"
++          p:driverClassName="com.mysql.jdbc.Driver"
++          p:url="jdbc:mysql://localhost:3306/shibboleth"
++          p:username="shibboleth"
++          p:password="%{mysql.password}"
++          p:maxWait="15000"
++          p:validationQuery="select 1"
++          p:validationQueryTimeout="0" />
++          <!-- bei manchen Java Versionen führt der letzte Parameter zu einer Fehlermeldung, 
++               ggf. weglassen --> 
++ 
++    <!-- unter Tomcat8 sollte das Bean von org.apache.tomcat.jdbc.pool.DataSource 
++         abgeleitet werden
++    -->
++ 
++    <!-- Bean for accessing the "shibpid" table -->
++    <bean id="PersistentIdStore"
++          class="net.shibboleth.idp.saml.nameid.impl.JDBCPersistentIdStore"
++          p:dataSource-ref="shibboleth.MySQLDataSource" />
++ 
++    <!--
++    Glue which is needed for attaching a MySQL data source
++    via JPA (Java Persistence API) and Hibernate ORM, needed for
++    the "storagerecords" table.
++    -->
++    <bean id="shibboleth.JPAStorageService"
++          class="org.opensaml.storage.impl.JPAStorageService"
++          p:cleanupInterval="%{idp.storage.cleanupInterval:PT10M}"
++          c:factory-ref="shibboleth.JPAStorageService.EntityManagerFactory" />
++ 
++    <bean id="shibboleth.JPAStorageService.EntityManagerFactory"
++          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
++        <property name="packagesToScan" value="org.opensaml.storage.impl"/>
++        <property name="dataSource" ref="shibboleth.MySQLDataSource"/>
++        <property name="jpaVendorAdapter" ref="shibboleth.JPAStorageService.JPAVendorAdapter"/>
++        <property name="jpaDialect">
++            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
++        </property>
++    </bean>
++ 
++    <!--
++    <bean id="shibboleth.JPAStorageService.JPAVendorAdapter"
++          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
++          p:generateDdl="true"
++          p:database="MYSQL"
++          p:databasePlatform="org.hibernate.dialect.MySQL5Dialect" />
++    -->
++    <bean id="shibboleth.JPAStorageService.JPAVendorAdapter"
++          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
++          <property name="database" value="MYSQL" />
++    </bean>
++<bean id="shibboleth.JPAStorageService.DataSource"
++    class="com.zaxxer.hikari.HikariDataSource" destroy-method="close" lazy-init="true"
++    p:driverClassName="com.mysql.jdbc.Driver"
++    p:jdbcUrl="jdbc:mysql://localhost:3306/storageservice"
++    p:username="shibboleth"
++    p:password="GEHEIM" />
+     
+ </beans>
+diff --git a/conf/idp.properties b/conf/idp.properties
+index 8434aaf..10c44c6 100644
+--- a/conf/idp.properties
++++ b/conf/idp.properties
+@@ -82,6 +82,7 @@ idp.encryption.cert= %{idp.home}/credentials/idp-encryption.crt
+ 
+ # Set to "shibboleth.StorageService" for server-side storage of user sessions
+ #idp.session.StorageService = shibboleth.ClientSessionStorageService
++idp.session.StorageService = shibboleth.JPAStorageService
+ 
+ # Size of session IDs
+ #idp.session.idSize = 32
+@@ -125,21 +126,27 @@ idp.authn.flows= Password
+ 
+ # Set to "shibboleth.StorageService" or custom bean for alternate storage of consent
+ #idp.consent.StorageService = shibboleth.ClientPersistentStorageService
++idp.consent.StorageService = shibboleth.JPAStorageService
+ 
+ # Set to "shibboleth.consent.AttributeConsentStorageKey" to use an attribute
+ # to key user consent storage records (and set the attribute name)
++idp.consent.userStorageKey = shibboleth.consent.AttributeConsentStorageKey
++idp.consent.userStorageKeyAttribute = %{idp.persistentId.sourceAttribute}
+ #idp.consent.userStorageKey = shibboleth.consent.PrincipalConsentStorageKey
+ #idp.consent.userStorageKeyAttribute = uid
+ 
+ # Flags controlling how built-in attribute consent feature operates
+ #idp.consent.allowDoNotRemember = true
+ #idp.consent.allowGlobal = true
++idp.consent.allowGlobal = false
+ #idp.consent.allowPerAttribute = false
+ 
+ # Whether attribute values and terms of use text are compared
+ #idp.consent.compareValues = false
++idp.consent.compareValues = true
+ # Maximum number of consent records for space-limited storage (e.g. cookies)
+ #idp.consent.maxStoredRecords = 10
++idp.consent.maxStoredRecords = -1
+ # Maximum number of consent records for larger/server-side storage (0 = no limit)
+ #idp.consent.expandedMaxStoredRecords = 0
+ 
+@@ -196,3 +203,5 @@ idp.ui.fallbackLanguages= en,fr,de
+ #idp.fticks.federation=MyFederation
+ #idp.fticks.algorithm=SHA-256
+ #idp.fticks.salt=somethingsecret
++mysql.password=GEHEIM
++
+diff --git a/conf/intercept/consent-intercept-config.xml b/conf/intercept/consent-intercept-config.xml
+index ca183a7..94ed622 100644
+--- a/conf/intercept/consent-intercept-config.xml
++++ b/conf/intercept/consent-intercept-config.xml
+@@ -58,6 +67,7 @@
+         <value>transientId</value>
+         <value>persistentId</value>
+         <value>eduPersonTargetedID</value>
++        <value>uid_without_encoding</value>
+     </util:list>
+ 
+     <!-- 

@@ -1,0 +1,65 @@
+diff --git a/messages/consent-messages.properties b/messages/consent-messages.properties
+index bed612e..8e7764f 100644
+--- a/messages/consent-messages.properties
++++ b/messages/consent-messages.properties
+@@ -75,3 +75,8 @@ idp.attribute-release.rememberConsentItem          = I agree that the same infor
+ 
+ idp.attribute-release.globalConsent                = Do not ask me again
+ idp.attribute-release.globalConsentItem            = I agree that <strong>all</strong> of my information will be released to <strong>any</strong> service.
++
++my-terms = my-tou
++my-tou.title = Example Terms of Use
++my-tou.text = This is an example Terms of Use
++
+
+diff --git a/conf/relying-party.xml b/conf/relying-party.xml
+index 28c9193..d9d9d85 100644
+--- a/conf/relying-party.xml
++++ b/conf/relying-party.xml
+@@ -34,10 +34,10 @@
+     <bean id="shibboleth.DefaultRelyingParty" parent="RelyingParty">
+         <property name="profileConfigurations">
+             <list>
+-                <bean parent="Shibboleth.SSO" p:postAuthenticationFlows="attribute-release" />
++                <bean parent="Shibboleth.SSO" p:postAuthenticationFlows="#{ {'terms-of-use', 'attribute-release'} }" /> 
+                 <ref bean="SAML1.AttributeQuery" />
+                 <ref bean="SAML1.ArtifactResolution" />
+-                <bean parent="SAML2.SSO" p:postAuthenticationFlows="attribute-release" />
++                <bean parent="SAML2.SSO" p:postAuthenticationFlows="#{ {'terms-of-use', 'attribute-release'} }" p:nameIDFormatPrecedence="#{{'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent', 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient'}}"/>
+                 <ref bean="SAML2.ECP" />
+                 <ref bean="SAML2.Logout" />
+                 <ref bean="SAML2.AttributeQuery" />
+diff --git a/conf/intercept/consent-intercept-config.xml b/conf/intercept/consent-intercept-config.xml
+index ca183a7..94ed622 100644
+--- a/conf/intercept/consent-intercept-config.xml
++++ b/conf/intercept/consent-intercept-config.xml
+@@ -21,9 +21,19 @@
+     demonstrates use of a custom mapping table from the relying party name to the key to use. 
+     -->
+     
++    <!-- 
+     <alias alias="shibboleth.consent.terms-of-use.Key" name="shibboleth.RelyingPartyIdLookup.Simple" />
+-    
+-    <!--
++    -->
++
++    <!-- 
++    <alias alias="shibboleth.consent.terms-of-use.Key" name="shibboleth.SingleTermsOfUseText" />
++    -->
++
++    <bean id="shibboleth.consent.terms-of-use.Key" class="com.google.common.base.Functions" factory-method="constant">
++      <constructor-arg value="my-terms"/>
++    </bean>
++
++    <!-- 
+     <bean id="shibboleth.consent.terms-of-use.Key"
+             class="com.google.common.base.Functions" factory-method="compose">
+         <constructor-arg name="g">
+@@ -40,7 +50,6 @@
+         </constructor-arg>
+     </bean>
+     -->
+-
+     <!-- Attribute Release configuration -->
+ 
+     <!--

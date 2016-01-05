@@ -37,6 +37,11 @@ sudo JAVA_HOME=/usr ./build.sh -Didp.target.dir=${DEST}
 
 cd ${DEST}/conf
 sudo patch -p1 < $r/idp-conf.patch
+cd ${DEST}
+#sudo patch -p0 < $r/attributes.patch
+#sudo patch -p0 < $r/tou.patch
+#sudo patch -p0 < $r/pid.patch
+
 
 sudo mkdir -p /etc/ssl/aai
 sudo wget -q https://www.aai.dfn.de/fileadmin/metadata/dfn-aai.pem -O /etc/ssl/aai/dfn-aai.pem

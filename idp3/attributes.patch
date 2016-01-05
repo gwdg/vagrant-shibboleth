@@ -1,0 +1,74 @@
+diff --git a/conf/attribute-resolver.xml b/conf/attribute-resolver.xml
+index 52b475a..d19c45d 100644
+--- a/conf/attribute-resolver.xml
++++ b/conf/attribute-resolver.xml
+@@ -32,6 +32,11 @@
+     <!--      Attribute Definitions                 -->
+     <!-- ========================================== -->
+ 
++    <resolver:AttributeDefinition xsi:type="ad:Simple" id="uid_without_encoding" sourceAttributeID="uid">
++      <resolver:Dependency ref="myLDAP" />
++    </resolver:AttributeDefinition>
++
++
+     <!--
+     The EPPN is the "standard" federated username in higher ed.
+     For guidelines on the implementation of this attribute, refer
+@@ -91,5 +96,28 @@
+             <dc:Value>member</dc:Value>
+         </dc:Attribute>
+     </resolver:DataConnector>
++        
++    <!--
++	useStartTLS="%{idp.attribute.resolver.LDAP.useStartTLS:true}">
++     -->
++    <resolver:DataConnector id="myLDAP" xsi:type="dc:LDAPDirectory"
++        ldapURL="%{idp.attribute.resolver.LDAP.ldapURL}"
++        baseDN="%{idp.attribute.resolver.LDAP.baseDN}" 
++        principal="%{idp.attribute.resolver.LDAP.bindDN}"
++        principalCredential="%{idp.attribute.resolver.LDAP.bindDNCredential}">
++        
++        <dc:FilterTemplate>
++            <![CDATA[
++                %{idp.attribute.resolver.LDAP.searchFilter}
++            ]]>
++        </dc:FilterTemplate>
++        <dc:ReturnAttributes>%{idp.attribute.resolver.LDAP.returnAttributes}</dc:ReturnAttributes>
++        <!--
++        <dc:StartTLSTrustCredential id="LDAPtoIdPCredential" xsi:type="sec:X509ResourceBacked">
++            <sec:Certificate>%{idp.attribute.resolver.LDAP.trustCertificates}</sec:Certificate>
++        </dc:StartTLSTrustCredential>
++        -->
++    </resolver:DataConnector>
++
+ 
+ </resolver:AttributeResolver>
+diff --git a/conf/ldap.properties b/conf/ldap.properties
+index 2f71169..df68411 100644
+--- a/conf/ldap.properties
++++ b/conf/ldap.properties
+@@ -46,7 +46,8 @@ idp.attribute.resolver.LDAP.bindDNCredential    = %{idp.authn.LDAP.bindDNCredent
+ idp.attribute.resolver.LDAP.useStartTLS         = %{idp.authn.LDAP.useStartTLS:true}
+ idp.attribute.resolver.LDAP.trustCertificates   = %{idp.authn.LDAP.trustCertificates:undefined}
+ idp.attribute.resolver.LDAP.searchFilter        = (uid=$resolutionContext.principal)
+-idp.attribute.resolver.LDAP.returnAttributes    = cn,homephone,mail
++# idp.attribute.resolver.LDAP.returnAttributes    = cn,homephone,mail
++idp.attribute.resolver.LDAP.returnAttributes    = uid,mail
+ 
+ # LDAP pool configuration, used for both authn and DN resolution
+ #idp.pool.LDAP.minSize                          = 3
+
+diff --git a/conf/attribute-filter.xml b/conf/attribute-filter.xml
+index f8c41ba..74068ca 100644
+--- a/conf/attribute-filter.xml
++++ b/conf/attribute-filter.xml
+@@ -15,7 +15,8 @@
+ 
+     <!-- Release some attributes to an SP. -->
+     <AttributeFilterPolicy id="example1">
+-        <PolicyRequirementRule xsi:type="Requester" value="https://sp.example.org" />
++        <PolicyRequirementRule xsi:type="Requester" value="https://sp.example.org/shibboleth" />
++        <!-- <PolicyRequirementRule xsi:type="Requester" value="https://sp.example.org" /> -->
+ 
+         <AttributeRule attributeID="eduPersonPrincipalName">
+             <PermitValueRule xsi:type="ANY" />
