@@ -5,7 +5,7 @@ cd $r
 . ./config
 
 ## sudo apt-get install -y openjdk-7-jdk
-sudo apt-get install -y tomcat8 # tomcat8-admin
+sudo apt-get install -y tomcat8 tomcat8-admin
 sudo usermod -aG ssl-cert tomcat8
 sudo patch /etc/default/tomcat8 etc-default-tomcat8.patch
 
@@ -21,6 +21,7 @@ sudo mv /etc/tomcat8/catalina.properties /etc/tomcat8/catalina.properties.old
 sudo cp tomcat8/catalina.properties /etc/tomcat8/catalina.properties
 sudo patch /etc/tomcat8/server.xml tomcat8/server.xml.patch
 sudo patch /etc/tomcat8/context.xml tomcat8/context.xml.patch
+sudo patch /etc/tomcat8/tomcat-users.xml tomcat8/tomcat-users.xml.patch
 sudo cp tomcat8/idp.xml /etc/tomcat8/Catalina/localhost/
 
 TOMCAT_HOME=/usr/share/tomcat8

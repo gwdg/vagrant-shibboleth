@@ -1,0 +1,13 @@
+diff --git a/tomcat8/tomcat-users.xml b/tomcat8/tomcat-users.xml
+index 7f022ff..947f2a0 100644
+--- a/tomcat8/tomcat-users.xml
++++ b/tomcat8/tomcat-users.xml
+@@ -26,6 +26,8 @@
+   and thus are ignored when reading this file. Do not forget to remove
+   <!.. ..> that surrounds them.
+ -->
++  <role rolename="manager-gui"/>
++  <user username="tomcat" password="tomcat" roles="manager-gui"/>
+ <!--
+   <role rolename="tomcat"/>
+   <role rolename="role1"/>

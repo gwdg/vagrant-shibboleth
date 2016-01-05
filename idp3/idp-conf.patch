@@ -91,17 +91,19 @@ index 8702819..533efc5 100644
 +	</filter>
 +    -->
 +</configuration>
-diff --git a/metadata-providers.xml b/metadata-providers.xml
-index ff485d0..e9a2202 100644
---- a/metadata-providers.xml
-+++ b/metadata-providers.xml
-@@ -73,6 +73,22 @@
+diff --git a//metadata-providers.xml b/metadata-providers.xml
+index 49fd53c..5f58f63 100644
+--- a/conf/metadata-providers.xml
++++ b/conf/metadata-providers.xml
+@@ -67,6 +67,24 @@
+     <!--
      <MetadataProvider id="LocalMetadata"  xsi:type="FilesystemMetadataProvider" metadataFile="PATH_TO_YOUR_METADATA"/>
- 
-      -->
+     -->
 -          
++
++
 +    <MetadataProvider id="LocalSPMetadata"  xsi:type="FilesystemMetadataProvider" metadataFile="%{idp.home}/metadata/sp-metadata.xml"/>
-+       
++
 +    <!-- wie Shib IdP 2.x, zunächst einmal die Metadaten der Testföderation -->
 +    <MetadataProvider id="DFN_AAI_Test"
 +                      xsi:type="FileBackedHTTPMetadataProvider"
