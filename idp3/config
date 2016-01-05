@@ -1,7 +1,7 @@
 V=3.2.1
 N=shibboleth-identity-provider-$V
 F=$N.tar.gz
-U=http://shibboleth.net/downloads/identity-provider/latest/$F
+U=http://shibboleth.net/downloads/identity-provider/$V/$F
 
 DEST=/opt/shibboleth-idp
 HOST=idp3
