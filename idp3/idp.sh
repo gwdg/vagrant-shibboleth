@@ -38,9 +38,9 @@ sudo JAVA_HOME=/usr ./build.sh -Didp.target.dir=${DEST}
 cd ${DEST}/conf
 sudo patch -p1 < $r/idp-conf.patch
 cd ${DEST}
-#sudo patch -p0 < $r/attributes.patch
-#sudo patch -p0 < $r/tou.patch
-#sudo patch -p0 < $r/pid.patch
+sudo patch -p1 < $r/attributes.patch
+sudo patch -p1 < $r/tou.patch
+sudo patch -p1 < $r/pid.patch
 
 
 sudo mkdir -p /etc/ssl/aai

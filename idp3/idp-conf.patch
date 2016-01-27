@@ -91,10 +91,10 @@ index 8702819..533efc5 100644
 +	</filter>
 +    -->
 +</configuration>
-diff --git a//metadata-providers.xml b/metadata-providers.xml
+diff --git a/metadata-providers.xml b/metadata-providers.xml
 index 49fd53c..5f58f63 100644
---- a/conf/metadata-providers.xml
-+++ b/conf/metadata-providers.xml
+--- a/metadata-providers.xml
++++ b/metadata-providers.xml
 @@ -67,6 +67,24 @@
      <!--
      <MetadataProvider id="LocalMetadata"  xsi:type="FilesystemMetadataProvider" metadataFile="PATH_TO_YOUR_METADATA"/>

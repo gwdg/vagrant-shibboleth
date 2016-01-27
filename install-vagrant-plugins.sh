@@ -1,7 +1,7 @@
 #!/bin/sh
 
-vagrant plugin list | grep vagrant-hostmaster 2>&1 >/dev/null
-if [ $? -eq 0 ]; then
+vagrant plugin list | grep vagrant-hostmanager 2>&1 >/dev/null
+if [ $? -eq 1 ]; then
 
   vagrant plugin install vagrant-hostmanager
 

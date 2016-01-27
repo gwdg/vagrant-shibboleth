@@ -5,9 +5,12 @@ Vagrant.configure(2) do |config|
   config.hostmanager.ignore_private_ip = false
   config.hostmanager.include_offline = false
 
-  config.vm.box = "debian/jessie64"
-  
+  config.vm.box = "kaorimatz/debian-8.2-amd64"
+  # config.vm.box = "debian/jessie64"
+  # DOES NOT WORK: config.vm.synced_folder ".", "/vagrant", type: 'virtualbox'
+
   config.vm.provision "base",    type: "shell", path: "common/base.sh"
+
   
   config.vm.define "ldap" do |config|
     config.vm.hostname = "ldap.example.org"
