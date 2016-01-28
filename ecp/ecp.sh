@@ -33,11 +33,11 @@
 
 # hash array of tags the user can use on the command
 # line that map to IdP SAML2 ECP endpoints
+# set -x
 declare -A idp_endpoints
 
 idp_endpoints=( 
-                ["Campus01"]="https://campus01.edu/idp/profile/SAML2/SOAP/ECP" 
-                ["Campus02"]="https://campus02.edu/idp/profile/SAML2/SOAP/ECP" 
+                ["idp"]="https://idp.example.org/idp/profile/SAML2/SOAP/ECP" 
                 )
 
 usage() 
@@ -96,6 +96,8 @@ if [ ! $temp_file_maker ] ; then
     if [ ! $temp_file_maker ] ; then
         echo "This script requires tempfile or mktemp. Aborting." >&2
         exit 1
+    else
+        temp_file_maker="$temp_file_maker /tmp/ecp.XXXXXX"
     fi
 fi
 
@@ -140,7 +142,7 @@ header_accept="Accept:text/html; application/vnd.paos+xml"
 header_paos="PAOS:ver=\"urn:liberty:paos:2003-08\";\"urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp\""
 
 # request the target from the SP and include headers signalling ECP
-sp_resp=`curl --silent -c $cookie_file -b $cookie_file -H "$header_accept" -H "$header_paos" "$target"`
+sp_resp=`curl -k --silent -c $cookie_file -b $cookie_file -H "$header_accept" -H "$header_paos" "$target"`
 
 ret=$?
 if [ $ret -ne 0 ]
@@ -300,7 +302,7 @@ fi
 # use curl to POST the request to the IdP the user signalled on the command line
 # and use the login supplied by the user, prompting for a password
 idp_endpoint=${idp_endpoints["$idp_tag"]}
-idp_response=`curl --silent --fail -X POST -H 'Content-Type: text/xml; charset=utf-8' -c $cookie_file -b $cookie_file --user $login -d "$idp_request" $idp_endpoint`
+idp_response=`curl -k --silent --fail -X POST -H 'Content-Type: text/xml; charset=utf-8' -c $cookie_file -b $cookie_file --user $login -d "$idp_request" $idp_endpoint`
 
 ret=$?
 if [ $ret -ne 0 ]
@@ -387,7 +389,7 @@ read -d '' soap_fault <<"EOF"
 </S:Envelope>
 EOF
 
-curl --silent -X POST -c $cookie_file -b $cookie_file -d "$soap_fault" -H "Content-Type: application/vnd.paos+xml" $responseConsumerURL > /dev/null 2>&1
+curl -k --silent -X POST -c $cookie_file -b $cookie_file -d "$soap_fault" -H "Content-Type: application/vnd.paos+xml" $responseConsumerURL > /dev/null 2>&1
 
 exit 1
 
@@ -446,7 +448,7 @@ fi
 # push the response to the SP at the assertion consumer service
 # URL included in the response from the IdP
 
-curl --silent -c $cookie_file -b $cookie_file -X POST -d "$sp_package" -H "Content-Type: application/vnd.paos+xml" $assertionConsumerServiceURL > /dev/null 2>&1
+curl -k --silent -c $cookie_file -b $cookie_file -X POST -d "$sp_package" -H "Content-Type: application/vnd.paos+xml" $assertionConsumerServiceURL > /dev/null 2>&1
 
 ret=$?
 if [ $ret -ne 0 ]
@@ -457,7 +459,7 @@ then
 fi
 
 # use curl and the existing established session to get the original target
-curl --silent -c $cookie_file -b $cookie_file -X GET "$target"
+curl -k --silent -c $cookie_file -b $cookie_file -X GET "$target"
 
 # on exit the temporary files and cookies will be deleted
 # a more sophisticated client could save the cookies and make
