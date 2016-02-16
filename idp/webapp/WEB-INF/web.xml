@@ -197,4 +197,30 @@
     <!-- <login-config> <auth-method>FORM</auth-method> <realm-name>IdP Password Authentication</realm-name> <form-login-config> 
         <form-login-page>/login.jsp</form-login-page> <form-error-page>/login-error.jsp</form-error-page> </form-login-config> </login-config> -->
 
+    <security-constraint>
+      <display-name>Shibboleth IdP</display-name>
+      <web-resource-collection>
+        <web-resource-name>ECP</web-resource-name>
+        <url-pattern>/profile/SAML2/SOAP/ECP</url-pattern>
+        <http-method>GET</http-method>
+        <http-method>POST</http-method>
+      </web-resource-collection>
+      <auth-constraint>
+        <role-name>*</role-name>
+      </auth-constraint>
+      <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+      </user-data-constraint>
+    </security-constraint>
+
+    <login-config>
+      <auth-method>BASIC</auth-method>
+      <realm-name>ShibUserPassAuth</realm-name>
+    </login-config>
+
+    <security-role>
+      <description>The role that is required to access the ECP area</description>
+      <role-name>*</role-name>
+    </security-role>
+
 </web-app>

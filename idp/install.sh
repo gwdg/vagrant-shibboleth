@@ -84,7 +84,12 @@ tee ${DEST}/etc/tomcat.xml <<EOF
          antiResourceLocking="false"
          antiJARLocking="false"
          unpackWAR="false"
-         swallowOutput="true"/>
+         swallowOutput="true">
+  <Realm className="org.apache.catalina.realm.JAASRealm"
+         appName="ShibUserPassAuth"
+         userClassNames="edu.vt.middleware.ldap.jaas.LdapPrincipal"
+         roleClassNames="edu.vt.middleware.ldap.jaas.LdapRole"/>
+</Context>
 EOF
 ln -s ${DEST}/etc/tomcat.xml /etc/tomcat7/Catalina/localhost/idp.xml
 
@@ -133,6 +138,8 @@ cd /opt/shibboleth-idp/metadata
 mv idp-metadata.xml idp-metadata-no-mdui.xml
 . $r/mdui.conf
 $r/mdui.sh idp-metadata-no-mdui.xml >idp-metadata.xml
+mv idp-metadata.xml idp-metadata-no-ecp.xml
+$r/mdui2.sh idp-metadata-no-ecp.xml >idp-metadata.xml
 cp $r/logo.jpg /var/www/html
 
 service apache2 reload
