@@ -18,6 +18,7 @@ cp /etc/shibboleth/shibboleth2.xml /etc/shibboleth/shibboleth2.xml.orig
 
 xmlstarlet ed -L \
   -i "//_:Sessions" -t attr -n consistentAddress -v true \
+  -i "//_:SSO" -t attr -n ECP -v true \
   -u "//_:Sessions/@handlerSSL" -v "true" \
   -u "//_:Sessions/@cookieProps" -v "https" \
   -u "//_:Handler[@type='Status']/@acl" -v "127.0.0.1 ::1 172.16.80.1" \
@@ -26,6 +27,17 @@ xmlstarlet ed -L \
   -u "//_:Errors/@helpLocation"   -v "https://sp.example.org/contact/" \
   -u "//_:Errors/@logoLocation"   -v "/shibboleth-sp/logo.jpg" \
   /etc/shibboleth/shibboleth2.xml 
+
+xmlstarlet ed -L \
+  -s /_:Attributes -t elem -n N \
+  -i //N -t attr -n 'name' -v urn:mace:dir:attribute-def:mail \
+  -i //N -t attr -n 'id'   -v mail \
+  -r //N -v Attribute \
+  -s /_:Attributes -t elem -n N \
+  -i //N -t attr -n 'name' -v urn:oid:0.9.2342.19200300.100.1.3 \
+  -i //N -t attr -n 'id'   -v mail \
+  -r //N -v Attribute \
+  /etc/shibboleth/attribute-map.xml
 
 a2enmod ssl
 a2ensite sp
