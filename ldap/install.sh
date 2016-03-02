@@ -1,14 +1,11 @@
-DEBIAN_FRONTEND=noninteractive apt-get install -y slapd ldap-utils
-ldapadd -Y EXTERNAL -H ldapi:/// <<EOF
-dn: olcDatabase={1}mdb,cn=config
-changetype: modify
-replace: olcRootPW
-olcRootPW: `slappasswd -s secret`
-
-dn: olcDatabase={0}config,cn=config
-changetype: modify
-replace: olcRootPW
-olcRootPW: `slappasswd -s secret`
+#!/bin/sh
+debconf-set-selections <<EOF
+slapd slapd/password1 password secret
+slapd slapd/internal/adminpw password secret
+slapd slapd/password2 password secret
+slapd slapd/internal/generated_adminpw password secret
+slapd slapd/domain string example.org
+slapd shared/organization string example.org
 EOF
+DEBIAN_FRONTEND=noninteractive apt-get install -y slapd ldap-utils
 ldapadd -x -D cn=admin,dc=example,dc=org -w secret -f /vagrant/ldap/dit.ldif
-
