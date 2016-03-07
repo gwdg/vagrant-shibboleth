@@ -4,11 +4,12 @@ This environment provides a self-contained runnable shibboleth environment compr
 four nodes, namely:
 
 - idp3.example.org (Shibboleth IdP v3.2.1, Tomcat 8, Apache 2.4)
-- idp.example.org (Shibboleth IdP v2.4.3, uApprove 2.6, Tomcat 7, Apache 2.4), 
+- idp.example.org (Shibboleth IdP v2.4.5, uApprove 2.6, Tomcat 7, Apache 2.4), 
 - sp.example.org (Shibboleth SP 2.5, Shibboleth Embedded Discovery 1.1.0, Apache 2.4),
 - ldap.example.org (OpenLDAP)
 
 running on Debian/Jessie 64-bit virtual machines.
+ECP is enabled per default.
 
 During the provisioning process the metadata between IdPs and the SP are exchanged.
 
