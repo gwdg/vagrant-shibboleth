@@ -1,5 +1,5 @@
 IDP_URL=http://shibboleth.net/downloads/identity-provider
-IDP_V=2.4.3
+IDP_V=2.4.5
 UAPPROVE_URL=https://forge.switch.ch/redmine/attachments/download/1823
 UAPPROVE_V=2.6.0
 
