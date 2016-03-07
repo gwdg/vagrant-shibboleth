@@ -88,6 +88,15 @@ Edit `idp3/config`, `sp/config` `idp/config` to update software versions of EDS,
 
 ## Advanced Topics
 
+### ECP
+
+Setup clients i.e. we use the ldap node as test site for ECP:
+
+    $ vagrant ssh ldap
+    $ cd /vagrant/ecp
+    $ ./install.sh
+    $ ./test.sh
+
 ### Troubleshooting
 
 #### Guest VM system-time out of sync 
