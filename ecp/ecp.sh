@@ -37,7 +37,8 @@
 declare -A idp_endpoints
 
 idp_endpoints=( 
-                ["idp"]="https://idp.example.org/idp/profile/SAML2/SOAP/ECP" 
+                ["idp"]="https://idp.example.org/idp/profile/SAML2/SOAP/ECP",
+                ["idp3"]="https://idp3.example.org/idp/profile/SAML2/SOAP/ECP" 
                 )
 
 usage() 
