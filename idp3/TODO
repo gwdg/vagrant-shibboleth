@@ -1,0 +1,16 @@
+idp.properties:
+
+idp.consent.StorageService = shibboleth.StorageService
+
+global.xml:
+
+<bean id="shibboleth.MySQLDataSource"
+      class="org.apache.commons.dbcp.BasicDataSource" => class="org.apache.tomcat.jdbc.pool.DataSource"
+
+    <bean id="shibboleth.JPAStorageService.JPAVendorAdapter"
+          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+          p:generateDdl="true"
+          p:database="MYSQL"
+          p:databasePlatform="org.hibernate.dialect.MySQL5Dialect" />
+
+

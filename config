@@ -4,6 +4,9 @@ IDP2=enabled
 # Enable IDP V3 host at 'idp3.example.org'
 IDP3=enabled
 
-# Choose sp's SSO ('idp','idp3' or 'eds')
+# Enable SP2 (which supports lazy sessions and isPassive)
+SP2=enabled
+
+# Choose sp's and sp2's SSO ('idp','idp3' or 'eds')
 SSO=eds
 

@@ -6,6 +6,7 @@ four nodes, namely:
 - idp3.example.org (Shibboleth IdP v3.2.1, Tomcat 8, Apache 2.4)
 - idp.example.org (Shibboleth IdP v2.4.5, uApprove 2.6, Tomcat 7, Apache 2.4), 
 - sp.example.org (Shibboleth SP 2.5, Shibboleth Embedded Discovery 1.1.0, Apache 2.4),
+- sp2.example.org (Shibboleth SP 2.5, Shibboleth Embedded Discovery 1.1.0, Apache 2.4, Lazy Session),
 - ldap.example.org (OpenLDAP)
 
 running on Debian/Jessie 64-bit virtual machines.
@@ -77,6 +78,39 @@ Run script to provision all machines.
 
    Finally, you should be successfully authenticated and redirected back to https://sp.example.org/secure-all,
    where you are welcomed by a 'Not found' page (which means 'success').
+
+## Test Lazy Sessions
+
+1. Enter SP2 without a running session
+
+   https://sp2.example.org/cgi-bin/test.py
+
+   See there is no session.
+
+2. Now enter non-lazy..
+
+   https://sp.example.org/cgi-bin/test.py
+
+   You will be redirected to WAYF EDS on sp, choose one of the IdPs and login..
+
+3. Now enter again sp2
+
+   https://sp2.example.org/cgi-bin/test.py
+
+   Now you should have a session.
+
+
+Second take.. login...
+
+
+1. Enter without a running session agian
+
+   https://sp2.example.org/cgi-bin/test.py
+
+   Now login,
+  
+   https://sp2.example.org/Shibboleth.sso/Login?target=/cgi-bin/test.py
+
 
 ## Fine-tune Installation 
   

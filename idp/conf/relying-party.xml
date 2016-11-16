@@ -83,6 +83,10 @@
         <metadata:MetadataProvider id="SPMD" xsi:type="metadata:FilesystemMetadataProvider"
                                    metadataFile="/opt/shibboleth-idp/metadata/sp-metadata.xml"
                                    maxRefreshDelay="P1D" />
+                                 
+        <metadata:MetadataProvider id="SPMD" xsi:type="metadata:FilesystemMetadataProvider"
+                                   metadataFile="/opt/shibboleth-idp/metadata/sp2-metadata.xml"
+                                   maxRefreshDelay="P1D" />
         
         <!-- Example metadata provider. -->
         <!-- Reads metadata from a URL and store a backup copy on the file system. -->
